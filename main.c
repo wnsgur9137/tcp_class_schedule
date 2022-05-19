@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 #define STRING_SIZE 256
 
@@ -13,9 +14,9 @@ char root_menu();
 char root_user();
 char root_subject();
 
-void select_class();
-void select_sub();
-void select_pro();
+char select_class();
+char select_sub();
+char select_pro();
 
 
 
@@ -186,16 +187,56 @@ void root_main() {
 }
 
 
-void select_class() {
+char select_class() {
+    
+    int grade = 0;
+    char class[10] = "";
 
+    printf("\n학년을 입력하십시오.\n\n > ");
+    scanf("%d", &grade);
+    printf("\n\n반을 입력하십시오.\n\n > ");
+    scanf("%s", class);
+    switch (grade) {
+        case 1:
+            if (!strcmp(class, "A") || !strcmp(class, "a")) {
+                printf("1학년 A반");
+            } else if(!strcmp(class, "B") || !strcmp(class, "b")) {
+                printf("1학년 B반");
+            } else if(!strcmp(class, "C") || !strcmp(class, "c")) {
+                printf("1학년 C반");
+            } else {
+                printf("\n\n[경고]\nA, B, C반 중 입력하십시오.\n");
+                select_class();
+                
+            }
+            
+            break;
+        case 2:
+
+            break;
+
+        case 3:
+
+            break;
+
+        case 4:
+
+            break;
+
+        default :
+            printf("학년을 다시 입력해 주십시오.");
+
+            break;
+    }
+    return 'e';
 }
 
-void select_sub() {
-
+char select_sub() {
+    return 'e';
 }
 
-void select_pro() {
-
+char select_pro() {
+    return 'e';
 }
 
 
@@ -216,12 +257,18 @@ int main() {
         } else if (!strcmp(&result, "e")) {
             printf("\n\n [경고] \n보기에서 입력해 주십시오.\n\tex) > 1\n\n");
         } else if (!strcmp(&result, "1")) {
+            result = select_class();
             printf("1 선택");
+            select_class();
         } else if (!strcmp(&result, "2")) {
+            result = select_sub();
             printf("2 선택");
         } else if (!strcmp(&result, "3")) {
+            result = select_pro();
             printf("3 선택");
         }
+
+        printf("\n--------------\nresult: %c\n---------------------", result);
     }
     return 0;
 }
