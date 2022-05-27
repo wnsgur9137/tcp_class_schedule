@@ -53,11 +53,9 @@ if __name__ == '__main__':
             pid = os.fork()
             if pid == -1:
                 connectionSocket.close()
-                print('connectionSocket.close() # if')
                 continue
             elif pid == 0:
                 server_socket.close()
-                print('server_socket.close()')
                 while True:
                     recvData = connectionSocket.recv(1024)  # 데이터 수신 최대 1024byte
                     data = str(recvData.decode("UTF-8"))

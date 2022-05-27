@@ -401,14 +401,11 @@ if __name__ == '__main__':
         if len(end_hour) == 1:
             end_hour = '0' + str(end_time.hour)
         if len(end_minute) == 1:
-            print('^^^^^^^')
-            print(end_minute, len(end_minute))
             end_minute = '0' + str(end_time.minute)
         time_list.append(str(i)+'교시\t'
                          + hour + ':' + minute + ' ~ '
                          + end_hour + ':' + end_minute)
         init_time += datetime.timedelta(minutes=50)
-    print(time_list)
 
     array = np.empty((0, 5), str)
 
