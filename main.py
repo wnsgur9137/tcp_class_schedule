@@ -5,6 +5,7 @@ from tkinter import messagebox
 from socket import *
 import numpy as np
 
+
 def createNewWindow():
     newWindow = tk.Toplevel(root)
     labelExample = tk.Label(newWindow, text = "New Window")
@@ -84,6 +85,7 @@ def combo_print():
         for v in proList:
             if v not in newProList:
                 newProList.append(v)
+
         subList = newSubList
         proList = newProList
 
@@ -379,7 +381,7 @@ if __name__ == '__main__':
     treeview.column("#5", width=100, anchor="center")
     treeview.heading("five", text="금", anchor="center")
 
-    # region 기본 베이스
+    # region treeview 기본 베이스
     time_list = []
     init_time = datetime.datetime(100, 1, 1, 8, 55, 00)
     new_time = init_time + datetime.timedelta(minutes=5)
@@ -388,9 +390,23 @@ if __name__ == '__main__':
     for i in range(1, 17):
         init_time += datetime.timedelta(minutes=5)
         end_time = init_time + datetime.timedelta(minutes=50)
+        hour = str(init_time.hour)
+        minute = str(init_time.minute)
+        end_hour = str(end_time.hour)
+        end_minute = str(end_time.minute)
+        if len(hour) == 1:
+            hour = '0' + str(init_time.hour)
+        if len(minute) == 1:
+            minute = '0' + str(init_time.minute)
+        if len(end_hour) == 1:
+            end_hour = '0' + str(end_time.hour)
+        if len(end_minute) == 1:
+            print('^^^^^^^')
+            print(end_minute, len(end_minute))
+            end_minute = '0' + str(end_time.minute)
         time_list.append(str(i)+'교시\t'
-                         + str(init_time.hour) + ':' + str(init_time.minute) + ' ~ '
-                         + str(end_time.hour) + ':' + str(end_time.minute))
+                         + hour + ':' + minute + ' ~ '
+                         + end_hour + ':' + end_minute)
         init_time += datetime.timedelta(minutes=50)
     print(time_list)
 
