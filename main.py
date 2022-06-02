@@ -4,6 +4,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from socket import *
 import numpy as np
+import time
 
 
 def createNewWindow():
@@ -203,8 +204,6 @@ def showMessageBox(message):
 def exitTkinter():
     choice = messagebox.askyesno('종료', '프로그램을 종료하시겠습니까?')
     if choice:
-        client_socket.send(str('exit').encode("UTF-8"))
-        print("{0} 서버에 전송".format(str('exit')))
         root.destroy()
 
 
@@ -221,7 +220,7 @@ if __name__ == '__main__':
     # region main(root) tkinter
     root = tk.Tk()
     root.title("강의 시간표 검색 프로그램")
-    root.geometry('800x600')
+    root.geometry('800x800')
     root.resizable(False, False)
 
     btnExit = ttk.Button(root, text="종료", command=exitTkinter)
@@ -251,6 +250,7 @@ if __name__ == '__main__':
     nb_tab.add(sub_tab, text="과목 검색")
     nb_tab.add(pro_tab, text="교수 검색")
     # nb_tab.add(help_tab, text="사용 설명")
+    nb_tab.pack(fill='both')
     # endregion
 
 
@@ -353,11 +353,7 @@ if __name__ == '__main__':
     # endregion
 
 
-    # region main root
-    nb_tab.pack(fill='both')
-
-    # treeview = ttk.Treeview(root, columns=["time", "mon", "tue", "wed", "thu", "fri"],
-    #                         displaycolumns=["time", "mom", "tue", "wed", "thu", "fri"])
+    # region treeview 시간표
     treeview = ttk.Treeview(root, columns=["one", "two", "three", "four", "five"],
                             displaycolumns=["one", "two", "three", "four", "five"], height=18)
     treeview.pack()
@@ -415,19 +411,65 @@ if __name__ == '__main__':
         treeview.insert('', 'end', text=time_list[i], values=tree_list[i], iid=str(i) + '번')
     # endregion
 
-    # treelist = [("Tom", 80, 3), ("Bani", 71, 5), ("Boni", 90, 2), ("Dannel", 78, 4), ("Minho", 93, 1)]
-    #
-    # # 표에 데이터 삽입
-    # for i in range(len(treelist)):
-    #     treeview.insert('', 'end', text=i, values=treelist[i], iid=str(i) + "번")
 
-    btnExit.pack()
+    # 날씨
+    weather_tab = ttk.Notebook()
+    weather_frame = ttk.Frame(weather_tab)
+    weather_tab.add(weather_frame, text='날씨')
+
+    print("로딩중입니다...")
+
+    client_socket.send('weather'.encode("UTF-8"))
+    print("{0} 서버에 전송".format(str('weather')))
+
+    weather_data = client_socket.recv(2048).decode("UTF-8")
+    print("{} 서버에서 받음".format(weather_data))
+
+    weather_data_list_ = weather_data.split(',')
+    print('weather_data_list_: ', weather_data_list_)
+    weather_data_list = list()
+    for data in weather_data_list_:
+        if data == '':
+            continue
+        weather_data_list.append(data.split(':'))
+    print('weather_data_list: ', weather_data_list)
+
+
+    weather_tab.pack(fill='both')
+    lbl_weather_title = ttk.Label(weather_frame, text="용형동 날씨: ")
+    lbl_weather_sky = ttk.Label(weather_frame, text="하늘: ")
+    lbl_weather_sky_value = ttk.Label(weather_frame, text=weather_data_list[2][1])
+    lbl_weather_tmp = ttk.Label(weather_frame, text="온도: ")
+    lbl_weather_tmp_value = ttk.Label(weather_frame, text=weather_data_list[3][1] + '℃')
+    lbl_weather_hum = ttk.Label(weather_frame, text="습도: ")
+    lbl_weather_hum_value = ttk.Label(weather_frame, text=weather_data_list[4][1] + '%')
+    lbl_weather_rain = ttk.Label(weather_frame, text="강수량: ")
+    lbl_weather_rain_value = ttk.Label(weather_frame, text=weather_data_list[1][1])
+    lbl_weather_pty = ttk.Label(weather_frame, text="강수 형태: ")
+    lbl_weather_pty_value = ttk.Label(weather_frame, text=weather_data_list[0][1])
+
+    lbl_weather_title.grid(row=0, column=0, columnspan=1)
+    lbl_weather_sky.grid(row=1, column=0)
+    lbl_weather_sky_value.grid(row=1, column=1)
+    lbl_weather_tmp.grid(row=2, column=0)
+    lbl_weather_tmp_value.grid(row=2, column=1)
+    lbl_weather_hum.grid(row=3, column=0)
+    lbl_weather_hum_value.grid(row=3, column=1)
+    lbl_weather_rain.grid(row=4, column=0)
+    lbl_weather_rain_value.grid(row=4, column=1)
+    lbl_weather_pty.grid(row=5, column=0)
+    lbl_weather_pty_value.grid(row=5, column=1)
     # endregion
 
+    # 종료버튼
+    btnExit.pack()
 
     # tkinter 시작
     root.config(menu=m_menubar)
     root.mainloop()
+
+    client_socket.send(str('exit').encode("UTF-8"))
+    print("{0} 서버에 전송".format(str('exit')))
 
     client_socket.close()
     print("client 종료")

@@ -1,6 +1,9 @@
-from socket import *
-import os
-import threading
+from socket import *    # socket 라이브러리
+import os               # fork() 함수를 사용하기 위한 라이브러리
+import threading        # thread 사용을 위한 라이브러리
+import weather_api      # 날씨 api를 사용하는 py파일
+import schedule         # 정해진 시간마다 날씨 api를 업데이트하기 위함
+import time           # time.sleep() 사용 위한 라이브러리
 
 
 def read_send(fileName):
@@ -30,6 +33,56 @@ def read_send(fileName):
     #     print(ex)
 
 
+def send_weather():
+    weather_data_dict = weather_api.get_today_weather()
+    weather_data_key = list(weather_data_dict.keys())
+    weather_data_value = list(weather_data_dict.values())
+    if weather_data_value[0] == '0':
+        weather_data_value[0] = '없음'
+    elif weather_data_value[0] == '1':
+        weather_data_value[0] = '비'
+    elif weather_data_value[0] == '2':
+        weather_data_value[0] = '비/눈'
+    elif weather_data_value[0] == '3':
+        weather_data_value[0] = '눈'
+    elif weather_data_value[0] == '5':
+        weather_data_value[0] = '빗방울'
+    elif weather_data_value[0] == '6':
+        weather_data_value[0] = '빗방울/눈 날림'
+    elif weather_data_value[0] == '7':
+        weather_data_value[0] = '눈날림'
+
+    if weather_data_value[2] == '1':
+        weather_data_value[2] = '맑음'
+    elif weather_data_value[2] == '2':
+        weather_data_value[2] = '구름조금'
+    elif weather_data_value[2] == '3':
+        weather_data_value[2] = '구름많음'
+    elif weather_data_value[2] == '4':
+        weather_data_value[2] = '흐림'
+
+    if weather_data_value[1] != '강수없음':
+        weather_data_value[1] += 'mm'
+
+    weather_data_str = ''
+    for i in range(len(weather_data_key)):
+        weather_data_str += weather_data_key[i] + ':'
+        weather_data_str += weather_data_value[i] + ','
+        # weather_data_list.append(weather_data_key[i])
+        # weather_data_list.append(weather_data_value[i])
+
+    connectionSocket.send(weather_data_str.encode("UTF-8"))
+
+
+def weather_update():   #schedule 라이브러리 사용한 정기적인 업데이트
+    global weather_data
+    weather_data = weather_api.get_today_weather()
+    print('\n[weather 정기 업데이트]\n')
+
+
+weather_data = {}
+
+
 if __name__ == '__main__':
     HOST = 'localhost'  # Server IP
     PORT = 9008  # PORT
@@ -39,9 +92,14 @@ if __name__ == '__main__':
     server_socket.bind((HOST, PORT))
 
     server_socket.listen(1)  # 맵핑된 소켓을 연결 요청 대기 상태로 전환
-    print("서버 대기중(listen(1))")
+    print("서버 가동중")
 
+    weather_data = weather_api.get_today_weather()
+    schedule.every().minute.at(':50').do(weather_update)
+    print("서버 가동 완료... 접속 대기중")
     while True:
+        schedule.run_pending()
+        time.sleep(10)
         try:
             connectionSocket, addr = server_socket.accept()  # 실제 소켓 연결 시 반환되는 실제 통신용 연결된 소켓과 연결 주소 할당
 
@@ -63,10 +121,14 @@ if __name__ == '__main__':
                     try:
                         if data == 'exit':
                             break
+                        elif data == 'weather':
+                            send_weather()
                         else:
                             read_send(data)
-                    except:
+                    except error as e:
+                        print(e)
                         connectionSocket.send("ERROR".encode("UTF-8"))
+
 
                 connectionSocket.close()
                 print(str(addr), '접속이 종료되었습니다.')
@@ -76,6 +138,7 @@ if __name__ == '__main__':
         except error as e:
             print("오류", e)
             pass
+
 
     print('server 종료')
     server_socket.close()
