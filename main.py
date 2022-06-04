@@ -8,6 +8,11 @@ import time
 
 
 def createNewWindow():
+    """
+    새로운 윈도우 창을 만들 때 사용하는 함수.
+    labelExample =
+    buttonExample =
+    """
     newWindow = tk.Toplevel(root)
     labelExample = tk.Label(newWindow, text = "New Window")
     buttonExample = tk.Button(newWindow, text = "New Window button")
@@ -17,6 +22,11 @@ def createNewWindow():
 
 
 def help_window():
+    """
+    도움말 윈도우를 만드는 함수.
+    helpWindow
+    프로그램을 어떻게 사용하는지를 안내하는 윈도우다.
+    """
     helpWindow = tk.Toplevel(root)
     helpWindow.title('강의 시간표 검색 프로그램 도움말')
     helpWindow.geometry('400x300')
@@ -28,11 +38,18 @@ def help_window():
 
 
 def combo_print():
+    """
+    학년을 선택함에 따라 맞춰 변하는 과목, 교수님 목록을 변경하기 위한 함수이다.
+    subList = 학년에 따른 과목 리스트
+    proList = 학년에 따른 교수님 리스트
+
+    4학년을 선택할 시, A반의 이름은 J반으로 변경되며 B반과 C반은 클릭할 수 없어진다.
+    """
     global subject_1, subject_2, subject_3, subject_4
     subList = []
     proList = []
     print(grade.get())
-    if str(grade.get()) == '4':
+    if str(grade.get()) == '4': # 4학년을 선택할 시, A반의 이름은 J반으로 변경되며 B반과 C반은 클릭할 수 없어진다.
         rdo_class_A.config(text="J반", variable=student_class, value=4, state=tk.NORMAL)
         rdo_class_B.config(text="B반", variable=student_class, value=2, state=tk.DISABLED)
         rdo_class_C.config(text="B반", variable=student_class, value=2, state=tk.DISABLED)
@@ -97,6 +114,10 @@ def combo_print():
 
 
 def subject_data_dic(data):
+    """
+    리스트를 딕셔너리로 변경해주는 함수
+    여러 곳에서 사용할 것 같아 함수로 빼 놓음
+    """
     content_list = []
     content_dict = {}
     for line in data.split(','):
@@ -109,6 +130,10 @@ def subject_data_dic(data):
 
 
 def class_start():
+    """
+    학년과 반을 선택하여 조회하게 되면
+    해당 되는 시간표(데이터)를 서버에서 받아온다.
+    """
     global grade, student_class
     grade_ = grade.get()
     class_ = student_class.get()
@@ -164,6 +189,10 @@ def class_start():
 
 
 def schedule_make_list(data):
+    """
+    서버에서 받아온 시간표는 문자열이기 때문에,
+    이를 리스트로 변경하여 주는 함수이다.
+    """
     content_list = []
     for line in data.split(','):
         content_list2 = []
@@ -183,16 +212,27 @@ def schedule_make_list(data):
 
 
 def sub_start():
+    """
+    과목을 선택하고 조회하게 되면
+    해당 과목에 대한 시간표를 서버에서 받아오는 함수
+    """
     print('sub_start')
     pass
 
 
 def pro_start():
+    """
+    교수님을 선택하고 조회하게 되면
+    해당 교수에 대한 시간표를 서버에서 받아오는 함수
+    """
     print('pro_start')
     pass
 
 
 def showMessageBox(message):
+    """
+    메세지를 출력해주는 함수
+    """
     if message == 'inputGrade':
         messagebox.showerror('에러', '학년을 선택해 주십시오.')
     elif message == 'inputClass':
@@ -202,6 +242,9 @@ def showMessageBox(message):
 
 
 def exitTkinter():
+    """
+    프로그램 종료 버튼을 누를 시 실행되는 함수
+    """
     choice = messagebox.askyesno('종료', '프로그램을 종료하시겠습니까?')
     if choice:
         root.destroy()
@@ -324,7 +367,7 @@ if __name__ == '__main__':
     combo_Sub.set(subInitList[0])
     combo_Sub.place(x=0, y=45)
     # combo_Sub.grid(row=2, column=0)
-    btn_sub_start = ttk.Button(sub_tab, text="조회", command=class_start)
+    btn_sub_start = ttk.Button(sub_tab, text="조회", command=sub_start)
     btn_sub_start.place(x=325, y=100)
     # endregion
 
@@ -348,7 +391,7 @@ if __name__ == '__main__':
     combo_pro.set(proInitList[0])
     combo_pro.place(x=0, y=45)
     # combo_pro.grid(row=2, column=0)
-    btn_pro_start = ttk.Button(pro_tab, text="조회", command=class_start)
+    btn_pro_start = ttk.Button(pro_tab, text="조회", command=pro_start)
     btn_pro_start.place(x=325, y=100)
     # endregion
 
@@ -434,7 +477,6 @@ if __name__ == '__main__':
         weather_data_list.append(data.split(':'))
     print('weather_data_list: ', weather_data_list)
 
-
     weather_tab.pack(fill='both')
     lbl_weather_title = ttk.Label(weather_frame, text="용형동 날씨: ")
     lbl_weather_sky = ttk.Label(weather_frame, text="하늘: ")
@@ -468,8 +510,10 @@ if __name__ == '__main__':
     root.config(menu=m_menubar)
     root.mainloop()
 
+    # Window (GUI)가 종료되면 서버에 exit 문자열을 전송하게 되고, 서버는 이를 통해 현재 클라이언트와 통신을 끊는다.
     client_socket.send(str('exit').encode("UTF-8"))
     print("{0} 서버에 전송".format(str('exit')))
 
+    # 클라이언트 소켓을 종료한다.
     client_socket.close()
     print("client 종료")

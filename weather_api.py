@@ -27,7 +27,7 @@ def get_today_weather():
     print('날씨 api 연결중...')
     response = requests.get(url, params=params)
 
-    # print(response.content)
+    print(response.content)
     weather_data = dict()
 
     try:
