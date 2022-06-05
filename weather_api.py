@@ -57,7 +57,7 @@ def get_today_weather():
             if item['category'] == 'RN1':
                 weather_data['rn1'] = item['fcstValue']
                 if weather_data['rn1'] != '강수없음':
-                    weather_data['rn1'] += 'mm'
+                    weather_data['rn1'] += ''
             # 강수 형태
             if item['category'] == 'PTY':
                 weather_data['pty'] = item['fcstValue']

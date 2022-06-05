@@ -151,16 +151,17 @@ def class_start():
     elif grade_ == 3:
         recvData += '3-'
     elif grade_ == 4:
-        recvData += '4-'
+        recvData += '4'
 
-    if class_ == 1:
-        recvData += 'A'
-    elif class_ == 2:
-        recvData += 'B'
-    elif class_ == 3:
-        recvData += 'C'
-    elif class_ == 4:
+    if grade == 4:
         recvData += 'J'
+    else:
+        if class_ == 1:
+            recvData += 'A'
+        elif class_ == 2:
+            recvData += 'B'
+        elif class_ == 3:
+            recvData += 'C'
 
     client_socket.send(recvData.encode("UTF-8"))
     print('send: {}'.format(recvData.encode("UTF-8")))
@@ -373,7 +374,7 @@ if __name__ == '__main__':
 
 
     # region pro_tab
-    lbl_pro = ttk.Label(pro_tab, text="교수님: ")
+    lbl_pro = ttk.Label(pro_tab, text="학년: ")
     rdo_pro_grade_1 = ttk.Radiobutton(pro_tab, text="1학년", variable=grade, value=1, command=combo_print, width=5)
     rdo_pro_grade_2 = ttk.Radiobutton(pro_tab, text="2학년", variable=grade, value=2, command=combo_print, width=5)
     rdo_pro_grade_3 = ttk.Radiobutton(pro_tab, text="3학년", variable=grade, value=3, command=combo_print, width=5)
@@ -386,7 +387,7 @@ if __name__ == '__main__':
     rdo_pro_grade_4.grid(row=1, column=3)
 
     combo_pro = ttk.Combobox(pro_tab)
-    proInitList = ['교수님을 선택해 주십시오.']
+    proInitList = ['학년을 선택해 주십시오.']
     combo_pro.config(height=5, values=proInitList, state="readonly")
     combo_pro.set(proInitList[0])
     combo_pro.place(x=0, y=45)
