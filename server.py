@@ -12,7 +12,7 @@ def read_send(filename):
     """
     .txt 파일 읽고 전송
     """
-    file = './resorces/'+filename+'.txt'
+    file = './resources/'+filename+'.txt'
     print('file: ', file)
 
     fileContent = str()

@@ -7,7 +7,7 @@ import time           # time.sleep() 사용 위한 라이브러리
 
 
 def read_send(fileName):
-    file = './resorces/'+fileName+'.txt'
+    file = './resources/'+fileName+'.txt'
     print('file: ', file)
     try:
         fileContent = ''
