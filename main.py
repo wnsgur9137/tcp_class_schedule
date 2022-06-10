@@ -29,7 +29,7 @@ def help_window():
     """
     helpWindow = tk.Toplevel(root)
     helpWindow.title('강의 시간표 검색 프로그램 도움말')
-    helpWindow.geometry('400x300')
+    helpWindow.geometry('400x400')
     lbl_help = ttk.Label(helpWindow, text="도움말")
     lbl_help_content = ttk.Label(helpWindow, text="블라블라블라")
 
@@ -142,51 +142,37 @@ def class_start():
         showMessageBox('inputGrade')
     elif class_ == 0:
         showMessageBox('inputClass')
-
-    recvData = ''
-    if grade_ == 1:
-        recvData += '1-'
-    elif grade_ == 2:
-        recvData += '2-'
-    elif grade_ == 3:
-        recvData += '3-'
-    elif grade_ == 4:
-        recvData += '4'
-
-    if grade == 4:
-        recvData += 'J'
     else:
-        if class_ == 1:
-            recvData += 'A'
-        elif class_ == 2:
-            recvData += 'B'
-        elif class_ == 3:
-            recvData += 'C'
+        recvData = ''
+        if grade_ == 1:
+            recvData += '1-'
+        elif grade_ == 2:
+            recvData += '2-'
+        elif grade_ == 3:
+            recvData += '3-'
+        elif grade_ == 4:
+            recvData += '4-'
 
-    client_socket.send(recvData.encode("UTF-8"))
-    print('send: {}'.format(recvData.encode("UTF-8")))
+        if grade_ == 4:
+            recvData += 'J'
+        else:
+            if class_ == 1:
+                recvData += 'A'
+            elif class_ == 2:
+                recvData += 'B'
+            elif class_ == 3:
+                recvData += 'C'
 
-    data = client_socket.recv(2048).decode("UTF-8")
-    print('recv: {}'.format(data))
+        client_socket.send(recvData.encode("UTF-8"))
+        print('send: {}'.format(recvData.encode("UTF-8")))
 
-    tree_list = schedule_make_list(data)
-    print(tree_list)
-    #
-    # for i in range(len(tree_list)):
-    #     print(tree_list[i][0])
-    #     try:
-    #         print(tree_list[i][4])
-    #         print(tree_list[i][5])
-    #         print(tree_list[i][6])
-    #     except:
-    #         pass
+        data = client_socket.recv(2048).decode("UTF-8")
+        print('recv: {}'.format(data))
 
+        schedule_tree_list = schedule_make_list(data)
 
-    # treelist = [("Tom", 80, 3), ("Bani", 71, 5), ("Boni", 90, 2), ("Dannel", 78, 4), ("Minho", 93, 1)]
-    #
-    # # 표에 데이터 삽입
-    # for i in range(len(treelist)):
-    #     treeview.insert('', 'end', text=i, values=treelist[i], iid=str(i) + "번")
+        for i in range(len(schedule_tree_list)):
+            treeview.item(str(i) + '번', values=schedule_tree_list[i])
 
 
 def schedule_make_list(data):
@@ -194,22 +180,59 @@ def schedule_make_list(data):
     서버에서 받아온 시간표는 문자열이기 때문에,
     이를 리스트로 변경하여 주는 함수이다.
     """
-    content_list = []
+    content_list = list()
     for line in data.split(','):
-        content_list2 = []
+        content_list2 = list()
         if line == '':
             break
         content_list2.append(line)
         content_list.append(content_list2)
 
-    tree_list = []
+    conv_list = list()
     for line in content_list:
         content_list = []
         dummy_list = line[0]
         for word in dummy_list.split('-'):
+            if word == '월':
+                word = 0
+            elif word == '화':
+                word = 1
+            elif word == '수':
+                word = 2
+            elif word == '목':
+                word = 3
+            elif word == '금':
+                word = 4
+            try:
+                word = word.replace('교시', '')
+            except:
+                pass
             content_list.append(word)
-        tree_list.append(tuple(content_list))
-    return tree_list
+        conv_list.append(content_list)
+
+    conv2_list = list()
+    for c_list in conv_list:
+        c_list_len = len(c_list)
+        circle = c_list_len - 4
+        i = 4
+        for _ in range(circle):
+            dummy_list = list()
+            dummy_list.append(c_list[0])
+            dummy_list.append(c_list[1])
+            dummy_list.append(c_list[2])
+            dummy_list.append(c_list[3])
+            dummy_list.append(c_list[i])
+            i += 1
+            conv2_list.append(dummy_list)
+
+    schedule_tree_list = list()
+    for i in range(len(time_list)):
+        schedule_tree_list.append(['', '', '', '', ''])
+
+    for c2_list in conv2_list:
+        schedule_tree_list[int(c2_list[4])][int(c2_list[0])] = c2_list[1]
+
+    return schedule_tree_list
 
 
 def sub_start():
@@ -329,9 +352,9 @@ if __name__ == '__main__':
     rdo_grade_4 = ttk.Radiobutton(class_tab, text="4학년", variable=grade, value=4, command=combo_print, width=5)
 
     lbl_class = ttk.Label(class_tab, text="반 : ")
-    rdo_class_A = ttk.Radiobutton(class_tab, text="A반", variable=student_class, value=1, command=class_start)
-    rdo_class_B = ttk.Radiobutton(class_tab, text="B반", variable=student_class, value=2, command=class_start)
-    rdo_class_C = ttk.Radiobutton(class_tab, text="C반", variable=student_class, value=3, command=class_start)
+    rdo_class_A = ttk.Radiobutton(class_tab, text="A반", variable=student_class, value=1)
+    rdo_class_B = ttk.Radiobutton(class_tab, text="B반", variable=student_class, value=2)
+    rdo_class_C = ttk.Radiobutton(class_tab, text="C반", variable=student_class, value=3)
 
     btn_class_start = ttk.Button(class_tab, text="조회", command=class_start)
 
@@ -406,19 +429,19 @@ if __name__ == '__main__':
     treeview.column("#0", width=200, anchor="center")
     treeview.heading("#0", text="시간", anchor="center")
 
-    treeview.column("#1", width=100, anchor="center")
+    treeview.column("#1", width=120, anchor="center")
     treeview.heading("one", text="월", anchor="center")
 
-    treeview.column("#2", width=100, anchor="center")
+    treeview.column("#2", width=120, anchor="center")
     treeview.heading("two", text="화", anchor="center")
 
-    treeview.column("#3", width=100, anchor="center")
+    treeview.column("#3", width=120, anchor="center")
     treeview.heading("three", text="수", anchor="center")
 
-    treeview.column("#4", width=100, anchor="center")
+    treeview.column("#4", width=120, anchor="center")
     treeview.heading("four", text="목", anchor="center")
 
-    treeview.column("#5", width=100, anchor="center")
+    treeview.column("#5", width=120, anchor="center")
     treeview.heading("five", text="금", anchor="center")
 
     # region treeview 기본 베이스
@@ -455,7 +478,6 @@ if __name__ == '__main__':
         treeview.insert('', 'end', text=time_list[i], values=tree_list[i], iid=str(i) + '번')
     # endregion
 
-
     # 날씨
     weather_tab = ttk.Notebook()
     weather_frame = ttk.Frame(weather_tab)
@@ -479,7 +501,7 @@ if __name__ == '__main__':
     print('weather_data_list: ', weather_data_list)
 
     weather_tab.pack(fill='both')
-    lbl_weather_title = ttk.Label(weather_frame, text="용형동 날씨: ")
+    lbl_weather_title = ttk.Label(weather_frame, text="용현동 날씨: ")
     lbl_weather_sky = ttk.Label(weather_frame, text="하늘: ")
     lbl_weather_sky_value = ttk.Label(weather_frame, text=weather_data_list[2][1])
     lbl_weather_tmp = ttk.Label(weather_frame, text="온도: ")
@@ -506,6 +528,10 @@ if __name__ == '__main__':
 
     # 종료버튼
     btnExit.pack()
+
+    i = 3.2
+    round(i, 1)
+    print(i)
 
     # tkinter 시작
     root.config(menu=m_menubar)
