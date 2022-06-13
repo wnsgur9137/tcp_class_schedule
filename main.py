@@ -31,7 +31,10 @@ def help_window():
     helpWindow.title('강의 시간표 검색 프로그램 도움말')
     helpWindow.geometry('400x400')
     lbl_help = ttk.Label(helpWindow, text="도움말")
-    lbl_help_content = ttk.Label(helpWindow, text="블라블라블라")
+    lbl_help_content = ttk.Label(helpWindow, text="컴퓨터정보과 3학년 A반 202044021 이준혁\n"
+                                                  "TCP/IP 기말고사 과제물 시간표 조회 프로그램\n"
+                                                  "각 반을 검색하여 해당 시스템으 조회하는 프로그램이다.\n"
+                                                  "서버 측에서 시간표와 날씨 정보를 보내주어 클라이언트 측에서 출력한다.")
 
     lbl_help.pack()
     lbl_help_content.pack()
@@ -107,10 +110,6 @@ def combo_print():
         subList = newSubList
         proList = newProList
 
-        combo_Sub.config(height=5, values=subList, state="readonly")
-        combo_pro.config(height=5, values=proList, state="readonly")
-        combo_Sub.set(subList[0])
-        combo_pro.set(proList[0])
 
 
 def subject_data_dic(data):
@@ -235,24 +234,6 @@ def schedule_make_list(data):
     return schedule_tree_list
 
 
-def sub_start():
-    """
-    과목을 선택하고 조회하게 되면
-    해당 과목에 대한 시간표를 서버에서 받아오는 함수
-    """
-    print('sub_start')
-    pass
-
-
-def pro_start():
-    """
-    교수님을 선택하고 조회하게 되면
-    해당 교수에 대한 시간표를 서버에서 받아오는 함수
-    """
-    print('pro_start')
-    pass
-
-
 def showMessageBox(message):
     """
     메세지를 출력해주는 함수
@@ -314,8 +295,6 @@ if __name__ == '__main__':
     # help_tab = ttk.Frame(nb_tab)
     nb_tab.add(main_tab, text="index")
     nb_tab.add(class_tab, text="반 검색")
-    nb_tab.add(sub_tab, text="과목 검색")
-    nb_tab.add(pro_tab, text="교수 검색")
     # nb_tab.add(help_tab, text="사용 설명")
     nb_tab.pack(fill='both')
     # endregion
@@ -336,7 +315,7 @@ if __name__ == '__main__':
     # region main_tab
     lbl_main_about = ttk.Label(main_tab, text="컴퓨터정보과 3학년 A반 202044021 이준혁")
     lbl_main_content = ttk.Label(main_tab, text="TCP:IP 기말고사 과제물\n시간표 조회 프로그램")
-    lbl_main_content2 = ttk.Label(main_tab, text="각 반, 과목, 교수를 검색하여 해당 시간표를 조회하는 프로그램.\n서버 측에서 시간표를 보내주어 클라이언트에서 출력해준다.")
+    lbl_main_content2 = ttk.Label(main_tab, text="각 반을 검색하여 해당 시간표를 조회하는 프로그램.\n서버 측에서 시간표를 보내주어 클라이언트에서 출력해준다.")
 
     lbl_main_about.grid(row=0, column=0)
     lbl_main_content.grid(row=1, column=0, sticky=tk.W)
@@ -370,55 +349,6 @@ if __name__ == '__main__':
     # btn_class_start.grid(row=5, column=10, sticky=tk.E)
     btn_class_start.place(x=325, y=100)
     # endregion
-
-
-    # region sub_tab
-    lbl_sub_grade = ttk.Label(sub_tab, text="학년: ")
-    rdo_sub_grade_1 = ttk.Radiobutton(sub_tab, text="1학년", variable=grade, value=1, command=combo_print, width=5)
-    rdo_sub_grade_2 = ttk.Radiobutton(sub_tab, text="2학년", variable=grade, value=2, command=combo_print, width=5)
-    rdo_sub_grade_3 = ttk.Radiobutton(sub_tab, text="3학년", variable=grade, value=3, command=combo_print, width=5)
-    rdo_sub_grade_4 = ttk.Radiobutton(sub_tab, text="4학년", variable=grade, value=4, command=combo_print, width=5)
-
-    lbl_sub_grade.grid(row=0, column=0, sticky=tk.W)
-    rdo_sub_grade_1.grid(row=1, column=0)
-    rdo_sub_grade_2.grid(row=1, column=1)
-    rdo_sub_grade_3.grid(row=1, column=2)
-    rdo_sub_grade_4.grid(row=1, column=3)
-
-    combo_Sub = ttk.Combobox(sub_tab)
-    subInitList = ['학년을 선택해 주십시오.']
-    combo_Sub.config(height=5, values=subInitList, state="readonly")
-    combo_Sub.set(subInitList[0])
-    combo_Sub.place(x=0, y=45)
-    # combo_Sub.grid(row=2, column=0)
-    btn_sub_start = ttk.Button(sub_tab, text="조회", command=sub_start)
-    btn_sub_start.place(x=325, y=100)
-    # endregion
-
-
-    # region pro_tab
-    lbl_pro = ttk.Label(pro_tab, text="학년: ")
-    rdo_pro_grade_1 = ttk.Radiobutton(pro_tab, text="1학년", variable=grade, value=1, command=combo_print, width=5)
-    rdo_pro_grade_2 = ttk.Radiobutton(pro_tab, text="2학년", variable=grade, value=2, command=combo_print, width=5)
-    rdo_pro_grade_3 = ttk.Radiobutton(pro_tab, text="3학년", variable=grade, value=3, command=combo_print, width=5)
-    rdo_pro_grade_4 = ttk.Radiobutton(pro_tab, text="4학년", variable=grade, value=4, command=combo_print, width=5)
-
-    lbl_pro.grid(row=0, column=0, columnspan=4, sticky=tk.W)
-    rdo_pro_grade_1.grid(row=1, column=0)
-    rdo_pro_grade_2.grid(row=1, column=1)
-    rdo_pro_grade_3.grid(row=1, column=2)
-    rdo_pro_grade_4.grid(row=1, column=3)
-
-    combo_pro = ttk.Combobox(pro_tab)
-    proInitList = ['학년을 선택해 주십시오.']
-    combo_pro.config(height=5, values=proInitList, state="readonly")
-    combo_pro.set(proInitList[0])
-    combo_pro.place(x=0, y=45)
-    # combo_pro.grid(row=2, column=0)
-    btn_pro_start = ttk.Button(pro_tab, text="조회", command=pro_start)
-    btn_pro_start.place(x=325, y=100)
-    # endregion
-
 
     # region treeview 시간표
     treeview = ttk.Treeview(root, columns=["one", "two", "three", "four", "five"],

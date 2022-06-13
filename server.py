@@ -15,22 +15,22 @@ def read_send(filename, client_socket_thread, addr_thread):
     file = './resources/'+filename+'.txt'
     print('file: ', file)
 
-    fileContent = str()
-    lock.acquire()  #
+    fileContent = str() # 클라이언트 측에 전송하기 위한(인코딩 하기 위한) 문자열 형태의 전송 형식
+    lock.acquire()  # 파일을 읽어올 때 뮤텍스(thread lock)을 걸어준다.
     try:
         with open(file) as fp:
             lines = fp.readlines()
             for line in lines:
                 print(line[:-1])
-                fileContent += line[:-1]
+                fileContent += line[:-1]    # .txt 파일의 한 라인씩 fileContent 문자열에 추가한다.
 
-            client_socket_thread.send(fileContent.encode("UTF-8"))
+            client_socket_thread.send(fileContent.encode("UTF-8"))  # 클라이언트 측에 fileContent 문자열을 전송한다.
             print('데이터 전송', file, str(addr_thread))
     except error as e:
-        print('ERROR', e)
+        print('ERROR', e)   # 전송 중 에러가 발생할 경우, ERROR 메세지를 클라이언트 측에 전송한다.
         client_socket_thread.send('ERROR: read_send()'.encode("UTF-8"))
     finally:
-        lock.release()
+        lock.release() # try/except 문이 종료되면 뮤텍스(thread lock)을 해제한다.
 
 
 def send_weather(client_socket_thread, addr_thread):
