@@ -124,32 +124,32 @@ Front-End
 # **실행 화면**
 <hr>
 
-서버 실행
+서버 실행  
 ![server_start](./readmeImage/server_start.png)
 
 <br>
 
-클라이언트 실행
+클라이언트 실행  
 ![client_start](./readmeImage/client_start.png)
 ![client_start2](./readmeImage/client_start2.png)
 
 <br>
 
-도움말 메뉴바
+도움말 메뉴바  
 ![help_menubar](./readmeImage/help_menubar.png)
 ![help](./readmeImage/help.png)
 
 <br>
 
-시간표 통신 클라이언트
+시간표 통신 클라이언트  
 ![3-A_client](./readmeImage/3-A.png)  
 
-시간표 통신 서버
+시간표 통신 서버  
 ![3-A_server](./readmeImage/3-A_server.png)
 
 <br>
 
-클라이언트 종료 시 서버 출력
+클라이언트 종료 시 서버 출력  
 ![exit_server](./readmeImage/exit_server.png)
 
 
