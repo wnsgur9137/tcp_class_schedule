@@ -125,24 +125,31 @@ Front-End
 <hr>
 
 서버 실행  
-![server_start](./readmeImage/server_start.png)
+![server_start](./readmeImage/server_start.gif)
+
+[//]: # (![server_start]&#40;./readmeImage/server_start.png&#41;)
 
 <br>
 
 클라이언트 실행  
-![client_start](./readmeImage/client_start.png)
+![client_start](./readmeImage/client_start.gif)
+
+[//]: # (![client_start]&#40;./readmeImage/client_start.png&#41;)
 ![client_start2](./readmeImage/client_start2.png)
 
 <br>
 
 도움말 메뉴바  
-![help_menubar](./readmeImage/help_menubar.png)
-![help](./readmeImage/help.png)
+![help](./readmeImage/help.gif)  
+
+[//]: # (![help_menubar]&#40;./readmeImage/help_menubar.png&#41;)
+
+[//]: # (![help]&#40;./readmeImage/help.png&#41;)
 
 <br>
 
 시간표 통신 클라이언트  
-![3-A_client](./readmeImage/3-A.png)  
+![3-A_client](./readmeImage/3-A.gif)  
 
 시간표 통신 서버  
 ![3-A_server](./readmeImage/3-A_server.png)
